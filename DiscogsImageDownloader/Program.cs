@@ -143,9 +143,10 @@ namespace ConsoleApplication1
         public static void DownloadImage(ImageDLHelper imageInfo)
         {
             //
-            //  TODO: implement a way to search by release and with a different / similar artist name for artist with alias's
-            //         
-
+            //  TODO: implement a way to search by release and with a different / similar artist name 
+            //         (Example Aesop Rock's None Shall Pass search gives back no results 
+            //          because the correct artist name on discogs for this release is Aesop)
+            //          
 
             Discogs3 discogs = new Discogs3();
             SearchQuery query = new SearchQuery() { Artist = imageInfo.Artist, ReleaseTitle = imageInfo.Release, Type = SearchItemType.Release};
