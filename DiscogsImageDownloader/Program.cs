@@ -54,27 +54,48 @@ namespace ConsoleApplication1
 
         static void Main(string[] args)
         {
-             if (args.Length == 0 || !Directory.Exists(args[0]))
+             if (args.Length == 0)
             {
-                Console.WriteLine("Invalid directory");
+                Console.WriteLine("Missing arguments");
                 return;
             }
 
-            directoryPath = args[0];
 
+            bool scanOnly = false;
+
+            directoryPath = string.Empty;
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] == "--scanonly")
+                {
+                    scanOnly = true;
+                }
+                else
+                {
+                    directoryPath = args[i];
+                }
+            }
+
+            Console.WriteLine(directoryPath);
+
+            if (!Directory.Exists(directoryPath))
+            {
+                Console.WriteLine("Invalid directory: " + directoryPath);
+                return;
+            }
+            
             Task scanDirectory = Task.Factory.StartNew(() => ScanDirectory(directoryPath));
 
-            FileSystemWatcher fsWatcher = new FileSystemWatcher(directoryPath);
-
-            fsWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.DirectoryName;
-
-            fsWatcher.IncludeSubdirectories = true;
-
-            fsWatcher.Created += fsWatcher_Created;
-            fsWatcher.Renamed += fsWatcher_Renamed;
-
-            fsWatcher.EnableRaisingEvents = true;
-            
+            //if (!scanOnly)
+            //{
+            //    FileSystemWatcher fsWatcher = new FileSystemWatcher(directoryPath);
+            //    fsWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.DirectoryName;
+            //    fsWatcher.IncludeSubdirectories = true;
+            //    fsWatcher.Created += fsWatcher_Created;
+            //    fsWatcher.Renamed += fsWatcher_Renamed;
+            //    fsWatcher.EnableRaisingEvents = true;
+            //}
             Console.ReadLine();
         }
 
@@ -127,6 +148,7 @@ namespace ConsoleApplication1
 
                 string artistName = tokens[tokens.Length - 1];
 
+                if (artistName != "Compilations")
                 foreach (DirectoryInfo album in albums)
                 {
                     string cover = album.FullName + "\\cover.jpg";
@@ -148,7 +170,8 @@ namespace ConsoleApplication1
             //          because the correct artist name on discogs for this release is Aesop)
             //          
 
-            Discogs3 discogs = new Discogs3();
+            Discogs3 discogs = new Discogs3("DiscogsImageDownloader/1.0");
+            
             SearchQuery query = new SearchQuery() { Artist = imageInfo.Artist, ReleaseTitle = imageInfo.Release, Type = SearchItemType.Release};
             SearchResults results = discogs.Search(query);
                                     
