@@ -76,7 +76,6 @@ namespace ConsoleApplication1
             //    }
             //}
 
-
             if (!Directory.Exists(directoryPath))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -175,7 +174,7 @@ namespace ConsoleApplication1
             Task.WhenAll(tasks).Wait();
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("My work is done");
+            Console.WriteLine("\nMy work is done");
             Console.ResetColor();
         }
 
